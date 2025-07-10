@@ -1,6 +1,4 @@
-using System;
 using TMPro;
-using System.Collections;
 using UnityEngine;
 
 public class TimerView : MonoBehaviour
