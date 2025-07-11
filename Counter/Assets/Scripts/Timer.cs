@@ -11,7 +11,13 @@ public class Timer : MonoBehaviour
 
     private bool _isActive = false;
     private float _delay = 0.5f;
-    private int _value = 0;
+    private int _value;
+    private int _secondClickCoefficient = 2;
+
+    private void Start()
+    {
+        _value = 0;
+    }
 
     private void Update()
     {
@@ -34,7 +40,7 @@ public class Timer : MonoBehaviour
 
     private void OnClicksChanged(int clickCount)
     {
-        if (clickCount % 2 == 0)
+        if (clickCount % _secondClickCoefficient == 0)
         {
             _isActive = false;
             StopCoroutine(_coroutine);
