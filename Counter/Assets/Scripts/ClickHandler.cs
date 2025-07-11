@@ -3,20 +3,13 @@ using UnityEngine;
 
 public class ClickHandler : MonoBehaviour
 {
-    public event Action<int> ClicksChanged;
-    private int _clicksCount;
-
-    private void Start()
-    {
-        _clicksCount = 0;
-    }
+    public event Action MouseButtonClick;
 
     private void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            _clicksCount++;
-            ClicksChanged?.Invoke(_clicksCount);
+            MouseButtonClick?.Invoke();
         }
     }
 }

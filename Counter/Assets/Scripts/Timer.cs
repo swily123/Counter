@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 
 public class Timer : MonoBehaviour
@@ -11,52 +12,48 @@ public class Timer : MonoBehaviour
 
     private bool _isActive = false;
     private float _delay = 0.5f;
-    private int _value;
-    private int _secondClickCoefficient = 2;
-
-    private void Start()
-    {
-        _value = 0;
-    }
-
-    private void Update()
-    {
-        if (_isActive)
-        {
-            _value++;
-            _coroutine = StartCoroutine(WaitAndInvokeEvent(_delay, _value));
-        }
-    }
+    private int _value = 0;
 
     private void OnEnable()
     {
-        _clickHandler.ClicksChanged += OnClicksChanged;
+        _clickHandler.MouseButtonClick += OnClick;
     }
 
     private void OnDisable()
     {
-        _clickHandler.ClicksChanged -= OnClicksChanged;
+        _clickHandler.MouseButtonClick -= OnClick;
     }
 
-    private void OnClicksChanged(int clickCount)
+    private void OnClick()
     {
-        if (clickCount % _secondClickCoefficient == 0)
+        _isActive = !_isActive;
+
+        if (_isActive)
         {
-            _isActive = false;
-            StopCoroutine(_coroutine);
+            _coroutine = StartCoroutine(CountValueWithFrequency(_delay));
         }
         else
         {
-            _isActive = true;
+            if (_coroutine != null)
+            {
+                StopCoroutine(_coroutine);
+            }
         }
     }
 
-    private IEnumerator WaitAndInvokeEvent(float delay, int value)
+    private IEnumerator CountValueWithFrequency(float delay)
     {
-        _isActive = false;
-        var waitTime = new WaitForSeconds(delay);
-        ValueChanged?.Invoke(value);
-        yield return waitTime;
-        _isActive = true;
+        while (true)
+        {
+            var waitTime = new WaitForSeconds(delay);
+            InceraseValue();
+            ValueChanged?.Invoke(_value);
+            yield return waitTime;
+        }
+    }
+
+    private void InceraseValue()
+    {
+        ++_value;
     }
 }
